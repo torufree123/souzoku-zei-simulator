@@ -5,6 +5,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          50: "#F4F6FA",
+          100: "#E5EAF3",
+          200: "#C4D0E4",
+          300: "#94AACD",
+          400: "#5E80AD",
+          500: "#3B6091",
+          600: "#274A70",
+          700: "#1C3858",
+          800: "#132942",
+          900: "#0B1B30",
+          950: "#071223",
+          gold: "#B8862F",
+          "gold-light": "#D4B36A",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

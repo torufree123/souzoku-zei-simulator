@@ -14,9 +14,9 @@ interface WaffleBandProps {
 type Kind = 'deduction' | 'taxable' | 'tax'
 
 const CELL_CLASS: Record<Kind, string> = {
-  deduction: 'bg-neutral-200 dark:bg-neutral-700',
-  taxable: 'bg-blue-300 dark:bg-blue-800',
-  tax: 'bg-blue-600 dark:bg-blue-400',
+  deduction: 'bg-brand-100',
+  taxable: 'bg-brand-300',
+  tax: 'bg-brand-700',
 }
 
 /** 遺産100%を100セルで表す配分バンド（基礎控除 → 課税対象 → 税額相当） */

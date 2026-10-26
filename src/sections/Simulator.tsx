@@ -42,6 +42,8 @@ function clampNum(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, Math.round(v)))
 }
 
+const cardCls = 'border-brand-100 shadow-sm'
+
 export default function Simulator() {
   const [mode, setMode] = useState<Mode>('two')
   const [estateMan, setEstateMan] = useState(8000)
@@ -114,20 +116,20 @@ export default function Simulator() {
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,1fr)]">
       {/* ---------- 条件入力 ---------- */}
-      <Card>
+      <Card className={cardCls}>
         <CardHeader className="pb-4">
-          <CardTitle className="text-base">計算条件</CardTitle>
+          <CardTitle className="text-base text-brand-900">計算条件</CardTitle>
           <Tabs value={mode} onValueChange={(v) => switchMode(v as Mode)}>
-            <TabsList className="w-full">
-              <TabsTrigger value="single" className="flex-1">一次相続のみ</TabsTrigger>
-              <TabsTrigger value="two" className="flex-1">二次相続まで</TabsTrigger>
+            <TabsList className="w-full bg-brand-50">
+              <TabsTrigger value="single" className="flex-1 data-[state=active]:text-brand-900">一次相続のみ</TabsTrigger>
+              <TabsTrigger value="two" className="flex-1 data-[state=active]:text-brand-900">二次相続まで</TabsTrigger>
             </TabsList>
           </Tabs>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-2">
             <div className="flex items-baseline justify-between gap-3">
-              <Label htmlFor="estate-num">{two ? '一次相続の遺産総額' : '遺産総額'}</Label>
+              <Label htmlFor="estate-num" className="text-brand-800">{two ? '一次相続の遺産総額' : '遺産総額'}</Label>
               <span className="flex items-center gap-1.5">
                 <Input
                   id="estate-num"
@@ -141,7 +143,7 @@ export default function Simulator() {
                     if (e.target.value !== '' && !Number.isNaN(v)) setEstateMan(clampNum(v, 0, 1_000_000))
                   }}
                   onBlur={() => setEstateText(String(estateMan))}
-                  className="h-8 w-28 text-right tabular-nums"
+                  className="h-8 w-28 border-brand-200 text-right tabular-nums focus-visible:ring-brand-600"
                 />
                 <span className="text-xs text-muted-foreground">万円</span>
               </span>
@@ -153,14 +155,17 @@ export default function Simulator() {
               step={100}
               onValueChange={([v]) => setEstate(v)}
               aria-label="遺産総額スライダー（万円）"
+              className="**:data-[slot=slider-range]:bg-brand-600 **:data-[slot=slider-thumb]:border-brand-600"
             />
             <div className="flex flex-wrap gap-1.5">
               {ESTATE_PRESETS.map((p) => (
                 <Button
                   key={p}
-                  variant={estateMan === p ? 'default' : 'outline'}
+                  variant="outline"
                   size="sm"
-                  className="h-7 px-2.5 text-xs tabular-nums"
+                  className={`h-7 border-brand-200 px-2.5 text-xs tabular-nums ${
+                    estateMan === p ? 'bg-brand-700 text-white hover:bg-brand-800 hover:text-white' : 'text-brand-700 hover:bg-brand-50'
+                  }`}
                   onClick={() => setEstate(p)}
                 >
                   {fmtMan(p)}
@@ -171,12 +176,12 @@ export default function Simulator() {
 
           {!two && (
             <div className="space-y-2">
-              <Label htmlFor="comp-select">相続人の構成</Label>
+              <Label htmlFor="comp-select" className="text-brand-800">相続人の構成</Label>
               <Select
                 value={comp}
                 onValueChange={(v) => setComp(v as CompKey)}
               >
-                <SelectTrigger id="comp-select">
+                <SelectTrigger id="comp-select" className="border-brand-200">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -192,23 +197,23 @@ export default function Simulator() {
 
           {countMeta.max > 0 && (
             <div className="flex items-center justify-between gap-3">
-              <Label>{countMeta.countLabel}</Label>
+              <Label className="text-brand-800">{countMeta.countLabel}</Label>
               <span className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-8 w-8 border-brand-200 text-brand-700 hover:bg-brand-50"
                   disabled={count <= countMeta.min}
                   onClick={() => stepCount(-1)}
                   aria-label="人数を減らす"
                 >
                   −
                 </Button>
-                <span className="w-6 text-center text-sm font-medium tabular-nums">{count}</span>
+                <span className="w-6 text-center text-sm font-medium tabular-nums text-brand-900">{count}</span>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-8 w-8 border-brand-200 text-brand-700 hover:bg-brand-50"
                   disabled={count >= countMeta.max}
                   onClick={() => stepCount(1)}
                   aria-label="人数を増やす"
@@ -223,8 +228,8 @@ export default function Simulator() {
             <>
               <div className="space-y-2">
                 <div className="flex items-baseline justify-between gap-3">
-                  <Label htmlFor="share-range">一次相続で配偶者が取得する割合</Label>
-                  <span className="text-sm font-medium tabular-nums">{sharePct}%</span>
+                  <Label htmlFor="share-range" className="text-brand-800">一次相続で配偶者が取得する割合</Label>
+                  <span className="text-sm font-semibold tabular-nums text-brand-700">{sharePct}%</span>
                 </div>
                 <Slider
                   id="share-range"
@@ -234,13 +239,14 @@ export default function Simulator() {
                   step={5}
                   onValueChange={([v]) => setSharePct(v)}
                   aria-label="一次相続で配偶者が取得する割合"
+                  className="**:data-[slot=slider-range]:bg-brand-600 **:data-[slot=slider-thumb]:border-brand-600"
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs leading-5 text-muted-foreground">
                   法定相続分は 50%。配偶者の取得分がそのまま二次相続の課税対象になります。
                 </p>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <Label htmlFor="own-num">配偶者固有の財産</Label>
+                <Label htmlFor="own-num" className="text-brand-800">配偶者固有の財産</Label>
                 <span className="flex items-center gap-1.5">
                   <Input
                     id="own-num"
@@ -254,7 +260,7 @@ export default function Simulator() {
                       if (e.target.value !== '' && !Number.isNaN(v)) setOwnMan(clampNum(v, 0, 1_000_000))
                     }}
                     onBlur={() => setOwnText(String(ownMan))}
-                    className="h-8 w-28 text-right tabular-nums"
+                    className="h-8 w-28 border-brand-200 text-right tabular-nums focus-visible:ring-brand-600"
                   />
                   <span className="text-xs text-muted-foreground">万円</span>
                 </span>
@@ -266,19 +272,19 @@ export default function Simulator() {
 
       {/* ---------- 結果 ---------- */}
       <div className="space-y-6">
-        <Card>
+        <Card className={cardCls}>
           <CardContent className="pt-6">
             <div className="flex flex-wrap items-baseline justify-between gap-3">
               <p className="text-sm text-muted-foreground">
                 {two ? '納付税額の合計（一次＋二次・概算）' : '納付税額の合計（概算）'}
               </p>
               {grand > 0 ? (
-                <Badge variant="secondary">課税対象あり</Badge>
+                <Badge className="bg-brand-700 text-white hover:bg-brand-700">課税対象あり</Badge>
               ) : (
-                <Badge variant="outline">基礎控除内のため課税なし</Badge>
+                <Badge variant="outline" className="border-brand-200 text-brand-700">基礎控除内のため課税なし</Badge>
               )}
             </div>
-            <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight sm:text-5xl">
+            <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight text-brand-900 sm:text-5xl">
               {fmtMan(grand / 10000)}
             </p>
             <p className="mt-2 text-sm text-muted-foreground tabular-nums">
@@ -298,13 +304,13 @@ export default function Simulator() {
                 ) : diffMan < 0 ? (
                   <>
                     法定相続分（配偶者50%）ケースより
-                    <span className="font-semibold text-blue-600 dark:text-blue-400"> {fmtMan(-diffMan)} 少ない</span>
+                    <span className="font-semibold text-brand-600"> {fmtMan(-diffMan)} 少ない</span>
                     計算です
                   </>
                 ) : (
                   <>
                     法定相続分（配偶者50%）ケースより
-                    <span className="font-semibold"> {fmtMan(diffMan)} 多い</span>
+                    <span className="font-semibold text-brand-gold"> {fmtMan(diffMan)} 多い</span>
                     計算です
                   </>
                 )}
@@ -313,17 +319,17 @@ export default function Simulator() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={cardCls}>
           <CardContent className="grid grid-cols-2 gap-x-6 gap-y-4 pt-6 sm:grid-cols-4">
             <div>
               <p className="text-xs text-muted-foreground">{two ? '基礎控除（一次）' : '基礎控除（3,000万＋600万×人数）'}</p>
-              <p className="mt-1 text-lg font-medium tabular-nums">
+              <p className="mt-1 text-lg font-medium tabular-nums text-brand-900">
                 {fmtMan((two ? result!.d1 : single!.deduction) / 10000)}
               </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">{two ? '課税遺産総額（一次）' : '課税遺産総額'}</p>
-              <p className="mt-1 text-lg font-medium tabular-nums">
+              <p className="mt-1 text-lg font-medium tabular-nums text-brand-900">
                 {fmtMan((two ? result!.t1 : single!.taxableTotal) / 10000)}
               </p>
             </div>
@@ -331,18 +337,18 @@ export default function Simulator() {
               <>
                 <div>
                   <p className="text-xs text-muted-foreground">二次相続の遺産総額</p>
-                  <p className="mt-1 text-lg font-medium tabular-nums">{fmtMan(result.e2 / 10000)}</p>
+                  <p className="mt-1 text-lg font-medium tabular-nums text-brand-900">{fmtMan(result.e2 / 10000)}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">課税遺産総額（二次）</p>
-                  <p className="mt-1 text-lg font-medium tabular-nums">{fmtMan(result.t2 / 10000)}</p>
+                  <p className="mt-1 text-lg font-medium tabular-nums text-brand-900">{fmtMan(result.t2 / 10000)}</p>
                 </div>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={cardCls}>
           <CardContent className="space-y-4 pt-6">
             {two && result ? (
               <>
@@ -371,16 +377,16 @@ export default function Simulator() {
         </Card>
 
         {two && (
-          <Card>
+          <Card className={cardCls}>
             <CardContent className="pt-6">
               <SensitivityChart data={curve} currentPct={sharePct} />
             </CardContent>
           </Card>
         )}
 
-        <Card>
+        <Card className={cardCls}>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">相続人ごとの内訳（算出税額ベース）</CardTitle>
+            <CardTitle className="text-base text-brand-900">相続人ごとの内訳（算出税額ベース）</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -395,8 +401,8 @@ export default function Simulator() {
               <TableBody>
                 {two && result ? (
                   <>
-                    <TableRow>
-                      <TableCell colSpan={4} className="pt-4 text-xs font-medium text-muted-foreground">
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell colSpan={4} className="pt-4 text-xs font-semibold text-brand-600">
                         一次相続
                       </TableCell>
                     </TableRow>
@@ -423,8 +429,8 @@ export default function Simulator() {
                         {result.childPaidEach > 0 ? fmtMan(result.childPaidEach / 10000) : '0円'}
                       </TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell colSpan={4} className="pt-4 text-xs font-medium text-muted-foreground">
+                    <TableRow className="hover:bg-transparent">
+                      <TableCell colSpan={4} className="pt-4 text-xs font-semibold text-brand-600">
                         二次相続（配偶者の遺産）
                       </TableCell>
                     </TableRow>
@@ -460,7 +466,7 @@ export default function Simulator() {
                   <TableCell className="text-right tabular-nums">
                     {two ? '―' : fmtMan(single!.taxableTotal / 10000)}
                   </TableCell>
-                  <TableCell className="text-right tabular-nums">{fmtMan(grand / 10000)}</TableCell>
+                  <TableCell className="text-right tabular-nums text-brand-900">{fmtMan(grand / 10000)}</TableCell>
                 </TableRow>
               </TableFooter>
             </Table>

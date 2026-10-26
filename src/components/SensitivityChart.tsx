@@ -37,7 +37,7 @@ export function SensitivityChart({ data, currentPct }: SensitivityChartProps) {
         <p className="text-xs text-muted-foreground">配偶者の取得割合と合計税額（一次＋二次）</p>
         {!flat && (
           <p className="text-xs tabular-nums text-muted-foreground">
-            最小: <span className="font-medium text-foreground">{fmtMan(minPoint.grandMan)}</span>
+            最小: <span className="font-medium text-brand-gold">{fmtMan(minPoint.grandMan)}</span>
             （配偶者 {minPoint.pct}%）
           </p>
         )}
@@ -52,7 +52,7 @@ export function SensitivityChart({ data, currentPct }: SensitivityChartProps) {
             x2={W - PAD_R}
             y1={PAD_T + t * (H - PAD_T - PAD_B)}
             y2={PAD_T + t * (H - PAD_T - PAD_B)}
-            className="stroke-border"
+            className="stroke-brand-100"
             strokeWidth={1}
             strokeDasharray="2 4"
           />
@@ -68,17 +68,18 @@ export function SensitivityChart({ data, currentPct }: SensitivityChartProps) {
           最小 {fmtMan(min)}
         </text>
         {/* 折れ線 */}
-        <polyline points={points} fill="none" className="stroke-blue-600 dark:stroke-blue-400" strokeWidth={2} strokeLinejoin="round" />
-        {/* 最小点 */}
+        <polyline points={points} fill="none" className="stroke-brand-600" strokeWidth={2} strokeLinejoin="round" />
+        {/* 最小点（ゴールド） */}
         {!flat && (
           <g>
-            <circle cx={x(minPoint.pct)} cy={y(minPoint.grandMan)} r={4} className="fill-background stroke-blue-600 dark:stroke-blue-400" strokeWidth={2} />
+            <circle cx={x(minPoint.pct)} cy={y(minPoint.grandMan)} r={4.5} className="fill-white stroke-brand-gold" strokeWidth={2} />
             <text
               x={x(minPoint.pct)}
-              y={y(minPoint.grandMan) - 8}
+              y={y(minPoint.grandMan) - 9}
               textAnchor="middle"
-              className="fill-muted-foreground"
+              className="fill-brand-gold"
               fontSize={11}
+              fontWeight={600}
             >
               最小
             </text>
@@ -90,17 +91,17 @@ export function SensitivityChart({ data, currentPct }: SensitivityChartProps) {
           x2={x(current.pct)}
           y1={PAD_T}
           y2={H - PAD_B}
-          className="stroke-foreground"
+          className="stroke-brand-900"
           strokeWidth={1}
           strokeDasharray="3 3"
-          opacity={0.5}
+          opacity={0.4}
         />
-        <circle cx={x(current.pct)} cy={y(current.grandMan)} r={5} className="fill-blue-600 dark:fill-blue-400" />
+        <circle cx={x(current.pct)} cy={y(current.grandMan)} r={5} className="fill-brand-700" />
         <text
           x={Math.min(Math.max(x(current.pct), 60), W - 60)}
           y={y(current.grandMan) - 12}
           textAnchor="middle"
-          className="fill-foreground"
+          className="fill-brand-900"
           fontSize={12}
           fontWeight={600}
         >
