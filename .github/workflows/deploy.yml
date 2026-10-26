@@ -15,7 +15,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # GitHub Pages へのデプロイは個人リポジトリ側のみで実行（組織側は Vercel が担当）
   build:
+    if: github.repository == 'torufree123/souzoku-zei-simulator'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
